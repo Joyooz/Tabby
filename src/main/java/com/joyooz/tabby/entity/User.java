@@ -18,4 +18,6 @@ public class User {
     private int userType;
     //表示用户是否被禁封
     private boolean isBanned;
+    //表示用户最后一次上传题目的时间
+    private long lastUploadTime;
 }

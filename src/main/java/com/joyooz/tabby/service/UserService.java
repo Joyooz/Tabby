@@ -150,6 +150,8 @@ public class UserService {
 
     //根据用户对象获取用户信息
     public UserInfo getUserInfo(User user) {
+        //为了防止信息更新不及时必须重新获取User对象
+        user=getUserByUserId(user.getUserId());
         UserInfo userInfo=new UserInfo(user.getUsername(),user.getCoins(),getLevel(user.getCoins()));
         return userInfo;
     }
@@ -188,6 +190,17 @@ public class UserService {
             //操作成功
             return "YES";
         }
+    }
+
+    //获取用户上次上传题目的时间戳
+    public long getLastUploadTime(User user) {
+        user=getUserByUserId(user.getUserId());
+        return user.getLastUploadTime();
+    }
+
+    //修改用户最后上传题目时间戳
+    public void updateLastUploadTime(String userId,long time) {
+        userMapper.updateLastUploadTime(userId,time);
     }
 
 }

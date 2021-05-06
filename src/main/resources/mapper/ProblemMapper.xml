@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.joyooz.tabby.dao.ProblemMapper">
+    <select id="getProblemList" resultType="com.joyooz.tabby.entity.Problem">
+        SELECT * FROM problem;
+    </select>
+
+    <insert id="insertUser">
+        INSERT INTO problem (problemId,protype,status,codes,startTime,endTime,isOriginal,uploader,solver,superviser,subject,isSolved,problem,solution)
+        VALUES (#{problemId},#{protype},0,0,0,0,#{isOriginal},#{uploader},#{solver},"",0,#{isSolved},#{problem},#{solution});
+    </insert>
+
+</mapper>

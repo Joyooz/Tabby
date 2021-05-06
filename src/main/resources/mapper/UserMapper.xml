@@ -7,8 +7,8 @@
     </select>
 
     <insert id="insertUser">
-        INSERT INTO user (userId,username,pwd,coins,userType,isBanned)
-        VALUES (#{userId},#{username},#{pwd},0,0,0);
+        INSERT INTO user (userId,username,pwd,coins,userType,isBanned,lastUploadTime)
+        VALUES (#{userId},#{username},#{pwd},0,0,0,0);
     </insert>
 
     <update id="updatePwdByUserId">
@@ -33,6 +33,11 @@
 
     <update id="debanUserByUserId">
         UPDATE user SET isBanned=0
+        WHERE userId=#{userId};
+    </update>
+
+    <update id="updateLastUploadTime">
+        UPDATE user SET lastUploadTime=#{time}
         WHERE userId=#{userId};
     </update>
 

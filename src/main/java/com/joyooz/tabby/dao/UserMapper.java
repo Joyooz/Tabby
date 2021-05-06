@@ -22,4 +22,6 @@ public interface UserMapper {
     void banUserByUserId(@PathVariable("userId")String userId);
     //根据id解封用户
     void debanUserByUserId(@PathVariable("userId")String userId);
+    //修改用户最后一次上传题目时间戳
+    void updateLastUploadTime(@PathVariable("userId")String userId,@PathVariable("time")long time);
 }

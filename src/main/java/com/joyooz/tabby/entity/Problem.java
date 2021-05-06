@@ -9,7 +9,7 @@ public class Problem {
     //由6位随机的数字和字母组成的字符串，区分题目的唯一标志
     private String problemId;
     //记录题目类型
-    private int type;
+    private int protype;
     //标记题目目前所处的状态，如待审核、已通过、未通过等
     private int status;
     //悬赏题和活动题的积分
@@ -30,8 +30,8 @@ public class Problem {
     private int subject;
     //记录题目是否已经被解答
     private int isSolved;
-    //题面的图片
-    private byte[] problem;
-    //最佳答案的图片
-    private byte[] solution;
+    //题面的文件名(不含目录)
+    private String problem;
+    //最佳答案的文件名(不含目录)
+    private String solution;
 }
