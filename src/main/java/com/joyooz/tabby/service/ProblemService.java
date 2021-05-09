@@ -2,6 +2,7 @@ package com.joyooz.tabby.service;
 
 import com.joyooz.tabby.dao.ProblemMapper;
 import com.joyooz.tabby.entity.Problem;
+import com.joyooz.tabby.entity.UnreviewedProblem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +17,19 @@ import java.util.Random;
 public class ProblemService {
     @Autowired
     ProblemMapper problemMapper;
+    @Autowired
+    UserService userService;
+
+    //根据题目id获取题目
+    public Problem getProblemById(String problemId) {
+        List<Problem> problemList=problemMapper.getProblemList();
+        for(Problem problem:problemList) {
+            if(problem.getProblemId().equals(problemId)) {
+                return problem;
+            }
+        }
+        return null;
+    }
 
     //获取不重复的题目id
     private String newProblemId() {
@@ -119,11 +133,77 @@ public class ProblemService {
             }
             try{
                 problemMapper.insertProblem(problemId,protype,isOriginal,userId,"",0,res,"");
+                Date date=new Date();
+                userService.updateLastUploadTime(userId,date.getTime());
                 return "YES";
             }catch (Exception e) {
                 return "NO";
             }
         }
+    }
+
+    //管理员获取未审核的题目数
+    public int getUnreviewedNum() {
+        try{
+            return problemMapper.getUnreviewedNum();
+        }catch(Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    //管理员获取第一个未审核的题目
+    public UnreviewedProblem getUnreviewedPro() {
+        //校验是否有题目
+        if(getUnreviewedNum()==0) {
+            return new UnreviewedProblem("null",0,0,"","");
+        }else{
+            try{
+                List<Problem> problemList= problemMapper.getUnreviewedList();
+                Problem pro=problemList.get(0);
+                return new UnreviewedProblem(pro.getProblemId(),pro.getProtype(),pro.getIsOriginal(),pro.getProblem(),pro.getSolution());
+            }catch(Exception e) {
+                return new UnreviewedProblem("null",0,0,"","");
+            }
+        }
+
+    }
+
+    //管理员提交审核结果
+    public String commitReview(String superviser,String problemId,int accepted,int codes,int lastTime,String comment) {
+        //判断题目是否存在且状态为待审核
+        Problem pro=getProblemById(problemId);
+        if(pro==null) {
+            return "NO";
+        }
+        if(pro.getStatus()!=0) {
+            return "NO";
+        }
+        //审核通过
+        if(accepted==1) {
+            Date date=new Date();
+            long startTime=date.getTime();
+            int lastMS=lastTime*24*3600*1000;
+            long endTime=startTime+lastMS;
+            try{
+                problemMapper.updateAcceptedProblem(problemId,codes,startTime,endTime,superviser);
+                return "YES";
+            }catch (Exception e) {
+                e.printStackTrace();
+                return "NO";
+            }
+        }
+        //审核不通过
+        if(accepted!=1) {
+            try{
+                problemMapper.updateUnacceptedProblem(problemId,superviser,comment);
+                return "YES";
+            }catch (Exception e) {
+                e.printStackTrace();
+                return "NO";
+            }
+        }
+        return "NO";
     }
 
 

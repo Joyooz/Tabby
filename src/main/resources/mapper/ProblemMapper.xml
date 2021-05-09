@@ -11,4 +11,22 @@
         VALUES (#{problemId},#{protype},0,0,0,0,#{isOriginal},#{uploader},#{solver},"",0,#{isSolved},#{problem},#{solution});
     </insert>
 
+    <select id="getUnreviewedNum" resultType="int">
+        SELECT COUNT(*) FROM problem WHERE status=0;
+    </select>
+
+    <select id="getUnreviewedList" resultType="com.joyooz.tabby.entity.Problem">
+        SELECT * FROM problem WHERE status=0;
+    </select>
+
+    <update id="updateAcceptedProblem">
+        UPDATE problem SET codes=#{codes},startTime=#{startTime},endTime=#{endTime},status=1,superviser=#{superviser}
+        WHERE problemId=#{problemId};
+    </update>
+
+    <update id="updateUnacceptedProblem">
+        UPDATE problem SET superviser=#{superviser},solution=#{comment}
+        WHERE problemId=#{problemId};
+    </update>
+
 </mapper>
